@@ -136,7 +136,7 @@
                 $presenceid = $_GET['presenceid'];
                 pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Izin' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
             }
-            elseif($clock>0){
+            elseif($clock>11){
                 pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
             }
             else{
