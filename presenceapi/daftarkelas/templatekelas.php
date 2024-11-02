@@ -17,15 +17,17 @@ $result = pg_query($conn, $query);
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Stratus</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Telat PLACEHOLDER</title> <!--PLACEHOLDER HERE-->
     <link rel="stylesheet" href="formstyle.css">
 </head>
 <body>
-    <form action="/presenceapi/presenceapi.php" method="GET">
+    <form action="/presenceapi.php" method="GET">
         <label for="names">Daftar Nama</label>
         <select name="presenceid" id="name">
+            <option value="refresh">Refresh</option>
             <?php
             // Fetch and display names in the dropdown
             while ($row = pg_fetch_assoc($result)) {
@@ -41,6 +43,7 @@ $result = pg_query($conn, $query);
             <option value="1">Hadir</option>
             <option value="2">Telat</option>
             <option value="3">Sakit</option>
+            <option value="4">Izin</option>
         </select>
         <input type="submit" value="Submit">
     </form>

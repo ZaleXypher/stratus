@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
-    <title>Stratos</title>
+    <title>Stratus</title>
     <script>
         var referrer = document.referrer;
         if(referrer) {
             window.location.href = referrer;
         }    
         else {
-            window.location.href = '/presenceapi/daftarkelas/daftartelatmaster.php'
+            window.location.href = '/daftarkelas/daftartelatmaster.php'
         }
     </script>
     
@@ -42,18 +42,19 @@
 
             //AUTO-HASH
             //HACK:AI GENERATED
-            pg_query($conn, "CREATE OR REPLACE FUNCTION generate_hash(text, text) RETURNS VOID AS $$
+            pg_query($conn, "CREATE OR REPLACE FUNCTION generate_hash(text) RETURNS VOID AS $$
             DECLARE
                 id TEXT;
             BEGIN
-                FOR id IN EXECUTE 'SELECT md5(nama) FROM ' || quote_ident($1) || '.' || quote_ident($2)
+                FOR id IN EXECUTE 'SELECT md5(nama) FROM presence.' || quote_ident($1)
                 LOOP
-                    EXECUTE 'UPDATE ' || quote_ident($1) || '.' || quote_ident($2) || ' SET id = ''' || id || ''' WHERE nama = (SELECT nama FROM ' || quote_ident($1) || '.' || quote_ident($2) || ' WHERE md5(nama) = ''' || id || ''');';
+                    EXECUTE 'UPDATE presence.' || quote_ident($1) || ' SET id = ''' || id || ''' WHERE nama = (SELECT nama FROM presence.' || quote_ident($1) || ' WHERE md5(nama) = ''' || id || ''');';
                 END LOOP;
             END
             $$ LANGUAGE plpgsql;");
             
-            pg_query_params($conn, 'SELECT generate_hash($1, $2)', array($pres, $month));
+            pg_query_params($conn, 'SELECT generate_hash($1)', array($stulist));
+            pg_query_params($conn, 'SELECT generate_hash($1)', array($month));
 
             //STUDENT LIST
             
@@ -74,7 +75,7 @@
 
             pg_query($conn, "CREATE OR REPLACE FUNCTION syncnames(text, text, text) RETURNS VOID AS $$
             BEGIN
-                EXECUTE 'INSERT INTO ' || quote_ident($1) || '.' || quote_ident($2) || '(kelas, absen, nama) SELECT kelas,absen,nama FROM ' || quote_ident($1) || '.' || quote_ident($3) || ';';
+                EXECUTE 'INSERT INTO ' || quote_ident($1) || '.' || quote_ident($2) || '(kelas, absen, nama, id) SELECT kelas,absen,nama,id FROM ' || quote_ident($1) || '.' || quote_ident($3) || ';';
             END;
             $$ LANGUAGE plpgsql;");
             
@@ -119,22 +120,25 @@
             //2 = LATE
             //3 = SICK
             //4 = OTHERS
-            if(isset($_GET['presenceid']) && $_GET['attendancestatus'] = '1') {
+            if(isset($_GET['presenceid']) && $_GET['attendancestatus'] == 1) {
                 $presenceid = $_GET['presenceid'];
                 pg_query($conn, "UPDATE $pres.$month SET \"$day\" = '$clock' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
             }             
-            elseif(isset($_GET['presenceid']) && $_GET['attendancestatus'] = '2'){
+            elseif(isset($_GET['presenceid']) && $_GET['attendancestatus'] == 2){
+                $presenceid = $_GET['presenceid'];
                 pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Telat' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
             }
-            elseif(isset($_GET['presenceid']) && $_GET['attendancestatus'] = '3'){
+            elseif(isset($_GET['presenceid']) && $_GET['attendancestatus'] == 3){
+                $presenceid = $_GET['presenceid'];
                 pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Sakit' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
             }
-            elseif(isset($_GET['presenceid']) && $_GET['attendancestatus'] = '4'){
+            elseif(isset($_GET['presenceid']) && $_GET['attendancestatus'] == 4){
+                $presenceid = $_GET['presenceid'];
                 pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Izin' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
             }
-            //elseif($clock>11){
-            //    pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
-            //}
+            elseif($clock>0){
+                pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
+            }
             else{
             }
         ?>
