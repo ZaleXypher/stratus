@@ -139,8 +139,6 @@
             elseif($clock>11){
                 pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
             }
-            else{
-            }
         ?>
     </body>
 </html>
