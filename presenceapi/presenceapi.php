@@ -15,8 +15,6 @@
             $host = 'localhost';
             $port = 5432;
             $dbname = 'strada';
-            $pres = 'presence';
-            $stulist = 'studentlist';
 
             //CONNECTING TO THE DB
             $conn = pg_connect("host=$host dbname=$dbname user=$user password=xiid");
@@ -50,8 +48,7 @@
             END
             $$ LANGUAGE plpgsql;");
             
-            pg_query_params($conn, 'SELECT generate_hash($1)', array($stulist));
-            pg_query_params($conn, 'SELECT generate_hash($1)', array($month));
+            pg_query_params($conn, 'SELECT generate_hash($1)', array('studentlist'));
 
             //STUDENT LIST
             
@@ -71,14 +68,14 @@
 
 
             //SYNC FUNCTION
-            pg_query($conn, "CREATE OR REPLACE FUNCTION syncnames(text, text) RETURNS VOID AS $$
+            pg_query($conn, "CREATE OR REPLACE FUNCTION syncnames(text) RETURNS VOID AS $$
             BEGIN
-                EXECUTE 'INSERT INTO presence.' || quote_ident($1) || '(kelas, absen, nama, id) SELECT kelas,absen,nama,id FROM presence.' || quote_ident($2) || ';';
+                EXECUTE 'INSERT INTO presence.' || quote_ident($1) || '(kelas, absen, nama, id) SELECT kelas,absen,nama,id FROM presence.studentlist;';
             END;
             $$ LANGUAGE plpgsql;");
             
             if ($rowCount[1] == 0) {
-                pg_query_params($conn, 'SELECT syncnames($1, $2)', array($month, $stulist));
+                pg_query_params($conn, 'SELECT syncnames($1)', array($month));
             }
            
 
@@ -97,7 +94,7 @@
             //CREATE PRESENCE LIST        
             pg_query($conn, "CREATE OR REPLACE FUNCTION checkpresence(text, text) RETURNS VOID AS $$
             BEGIN
-                EXECUTE 'INSERT INTO presence.presencelist (kelas, absen, nama, id, kehadiran) SELECT kelas,absen,nama,id,' || quote_ident($2) || ' FROM presence.' || quote_ident($1) || ';';
+                EXECUTE 'INSERT INTO presence.presencelist (kelas, absen, nama, id, kehadiran) SELECT kelas,absen,nama,id,' || quote_ident($1) || ' FROM presence.' || quote_ident($2) || ';';
             END;
             $$ LANGUAGE plpgsql;");
                 
@@ -105,7 +102,7 @@
                 
             pg_query($conn, 'DROP TABLE IF EXISTS presence.presencelist CASCADE;');
             pg_query($conn,'CREATE TABLE IF NOT EXISTS presence.presencelist (kelas TEXT, absen INT, nama TEXT, id varchar, kehadiran TEXT);');
-            pg_query_params($conn, 'SELECT checkpresence($1, $2)', array($month, $day));
+            pg_query_params($conn, 'SELECT checkpresence($1, $2)', array($day, $month));
 
 
             //INTERFACE WITH HTTP REQUESTS
@@ -115,27 +112,26 @@
             //2 = LATE
             //3 = SICK
             //4 = OTHERS
-            if(isset($_GET['presenceid']) && $_GET['attendancestatus'] == 1) {
+            if(isset($_GET['presenceid'])) {
                 $presenceid = $_GET['presenceid'];
-                $absensi = pg_query($conn, "UPDATE $pres.$month SET \"$day\" = '$clock' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
-                if(pg_affected_rows($absensi) >0){
-                    echo json_encode(['status' => 'success','message'=> 'Attendance updated']);
+                if($_GET['attendancestatus'] == 1){
+                    $absensi = pg_query($conn, "UPDATE presence.$month SET \"$day\" = '$clock' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
+                    if(pg_affected_rows($absensi) >0){
+                        echo json_encode(['status' => 'success','message'=> 'Attendance updated']);
+                    }
+                    else{
+                        echo json_encode(['status' => 'error','message'=> 'Attendance not updated']);
+                    }
+                }                 
+                elseif($_GET['attendancestatus'] == 2){
+                    pg_query($conn, "UPDATE presence.$month SET \"$day\" = 'Telat' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
                 }
-                else{
-                    echo json_encode(['status' => 'error','message'=> 'Attendance not updated']);
+                elseif($_GET['attendancestatus'] == 3){
+                    pg_query($conn, "UPDATE presence.$month SET \"$day\" = 'Sakit' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
                 }
-            }             
-            elseif(isset($_GET['presenceid']) && $_GET['attendancestatus'] == 2){
-                $presenceid = $_GET['presenceid'];
-                pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Telat' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
-            }
-            elseif(isset($_GET['presenceid']) && $_GET['attendancestatus'] == 3){
-                $presenceid = $_GET['presenceid'];
-                pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Sakit' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
-            }
-            elseif(isset($_GET['presenceid']) && $_GET['attendancestatus'] == 4){
-                $presenceid = $_GET['presenceid'];
-                pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Izin' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
+                elseif($_GET['attendancestatus'] == 4){
+                    pg_query($conn, "UPDATE presence.$month SET \"$day\" = 'Izin' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
+                }
             }
             //elseif($clock>11){
                 //pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
