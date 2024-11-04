@@ -15,6 +15,6 @@ SELECT
     [{"link":"/datadownloads/data2024.sql","title":"2024"},
     {"link":"/datadownloads/data2025.sql","title":"2025"}]}') as menu_item;
 SELECT 'button' AS component, 'center' AS justify;
-SELECT 'Daftar Tidak Hadir' AS title, 'daftartidakhadir/xiid.sql' as link;
-SELECT 'list' AS component, 'Daftar Kehadiran Kelas XII-D' AS title;
-SELECT nama AS title, kehadiran AS description FROM presence.presencelist WHERE kelas = 'XII-D';
+SELECT 'Alasan Tidak Hadir' AS title, 'http://localhost:8090/daftarkelas/daftartelatxiid.php' as link;
+SELECT 'list' AS component, 'Daftar Tidak Hadir Kelas XII-D' AS title;
+SELECT nama AS title FROM presence.presencelist WHERE kelas = 'XII-D' AND kehadiran IS NULL;

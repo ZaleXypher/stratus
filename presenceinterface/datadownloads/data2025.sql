@@ -1,6 +1,6 @@
 SELECT 
     'shell' AS component, 
-    'XII-D' AS title,
+    'Data 2025' AS title,
     '1' AS sidebar,
     'dark' AS theme,
     JSON('{"title":"Daftar Kelas","submenu":
@@ -14,7 +14,16 @@ SELECT
     JSON('{"title":"Data Absensi","submenu":
     [{"link":"/datadownloads/data2024.sql","title":"2024"},
     {"link":"/datadownloads/data2025.sql","title":"2025"}]}') as menu_item;
-SELECT 'button' AS component, 'center' AS justify;
-SELECT 'Daftar Tidak Hadir' AS title, 'daftartidakhadir/xiid.sql' as link;
-SELECT 'list' AS component, 'Daftar Kehadiran Kelas XII-D' AS title;
-SELECT nama AS title, kehadiran AS description FROM presence.presencelist WHERE kelas = 'XII-D';
+SELECT 'list' AS component, 'Data Absensi 2025' as title;
+SELECT 'Januari' AS title, '2025/jan.sql' as link;
+SELECT 'Februari' AS title, '2025/feb.sql' as link;
+SELECT 'Maret' AS title, '2025/mar.sql' as link;
+SELECT 'April' AS title, '2025/apr.sql' as link;
+SELECT 'Mei' AS title, '2025/may.sql' as link;
+SELECT 'Juni' AS title, '2025/jun.sql' as link;
+SELECT 'Juli' AS title, '2025/jul.sql' as link;
+SELECT 'Agustus' AS title, '2025/aug.sql' as link;
+SELECT 'September' AS title, '2025/sep.sql' as link;
+SELECT 'Oktober' AS title, '2025/oct.sql' as link;
+SELECT 'November' AS title, '2025/nov.sql' as link;
+SELECT 'December' AS title, '2025/dec.sql' as link;

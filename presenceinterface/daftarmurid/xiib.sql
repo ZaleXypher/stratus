@@ -1,6 +1,7 @@
+--REPLACE PLACEHOLDER AND PLACEKELAS
 SELECT 
     'shell' AS component, 
-    'XII-D' AS title,
+    'XII-B' AS title,
     '1' AS sidebar,
     'dark' AS theme,
     JSON('{"title":"Daftar Kelas","submenu":
@@ -15,6 +16,6 @@ SELECT
     [{"link":"/datadownloads/data2024.sql","title":"2024"},
     {"link":"/datadownloads/data2025.sql","title":"2025"}]}') as menu_item;
 SELECT 'button' AS component, 'center' AS justify;
-SELECT 'Daftar Tidak Hadir' AS title, 'daftartidakhadir/xiid.sql' as link;
-SELECT 'list' AS component, 'Daftar Kehadiran Kelas XII-D' AS title;
-SELECT nama AS title, kehadiran AS description FROM presence.presencelist WHERE kelas = 'XII-D';
+SELECT 'Daftar Tidak Hadir' AS title, 'daftartidakhadir/xiib.sql' as link;
+SELECT 'list' AS component, 'Daftar Kehadiran  Kelas XII-B' AS title;
+SELECT nama AS title, kehadiran AS description FROM presence.presencelist WHERE kelas = 'XII-B'; 

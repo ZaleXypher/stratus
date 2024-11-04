@@ -1,6 +1,6 @@
 SELECT 
     'shell' AS component, 
-    'XII-D' AS title,
+    'Data 2024' AS title,
     '1' AS sidebar,
     'dark' AS theme,
     JSON('{"title":"Daftar Kelas","submenu":
@@ -14,7 +14,6 @@ SELECT
     JSON('{"title":"Data Absensi","submenu":
     [{"link":"/datadownloads/data2024.sql","title":"2024"},
     {"link":"/datadownloads/data2025.sql","title":"2025"}]}') as menu_item;
-SELECT 'button' AS component, 'center' AS justify;
-SELECT 'Daftar Tidak Hadir' AS title, 'daftartidakhadir/xiid.sql' as link;
-SELECT 'list' AS component, 'Daftar Kehadiran Kelas XII-D' AS title;
-SELECT nama AS title, kehadiran AS description FROM presence.presencelist WHERE kelas = 'XII-D';
+SELECT 'list' AS component, 'Data Absensi 2024' as title;
+SELECT 'November' AS title, '2024/nov.sql' as link;
+SELECT 'December' AS title, '2024/dec.sql' as link;

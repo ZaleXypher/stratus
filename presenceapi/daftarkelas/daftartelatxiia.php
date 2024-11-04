@@ -10,7 +10,7 @@ $password = "xiid";
 $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
 
 // Query to fetch names
-$query = 'SELECT nama, id FROM presence.presencelist WHERE kelas = \'PLACEHOLDER\''; //PLACEHOLDER HERE
+$query = 'SELECT nama, id FROM presence.presencelist WHERE kelas = \'XII-A\'';
 $result = pg_query($conn, $query);
 ?>
 
@@ -20,7 +20,7 @@ $result = pg_query($conn, $query);
     <title>Stratus</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Telat PLACEHOLDER</title> <!--PLACEHOLDER HERE-->
+    <title>Daftar Telat XII-A</title>
     <link rel="stylesheet" href="formstyle.css">
 </head>
 <body>

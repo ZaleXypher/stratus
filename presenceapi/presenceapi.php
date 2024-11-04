@@ -6,9 +6,6 @@
         if(referrer) {
             window.location.href = referrer;
         }    
-        else {
-            window.location.href = '/daftarkelas/daftartelatmaster.php'
-        }
     </script>
     
     <body>
@@ -32,13 +29,13 @@
             $day = strtolower($today->format('d'));
             $clock = strtolower($today->format('H:i:s'));
 
-            pg_query($conn, "CREATE OR REPLACE FUNCTION create_table(text, text) RETURNS VOID AS $$
+            pg_query($conn, "CREATE OR REPLACE FUNCTION create_table(text) RETURNS VOID AS $$
             BEGIN
-                EXECUTE 'CREATE TABLE IF NOT EXISTS ' || quote_ident($1) || '.' || quote_ident($2) || ' (kelas TEXT, absen INT, nama TEXT, id varchar);';
+                EXECUTE 'CREATE TABLE IF NOT EXISTS presence.' || quote_ident($1) || ' (kelas TEXT, absen INT, nama TEXT, id varchar);';
             END
             $$ LANGUAGE plpgsql;");
             
-            pg_query_params($conn,'SELECT create_table($1, $2)', array($pres, $month));
+            pg_query_params($conn,'SELECT create_table($1)', array($month));
 
             //AUTO-HASH
             //HACK:AI GENERATED
@@ -60,57 +57,55 @@
             
             //GET ROW COUNT
             //HACK:AI GENERATED, ONLY SLIGHTLY CHANGED
-            pg_query($conn, "CREATE OR REPLACE FUNCTION countrow(text, text) RETURNS VOID AS $$
+            pg_query($conn, "CREATE OR REPLACE FUNCTION countrow(text) RETURNS VOID AS $$
                 DECLARE
             row_count INT;
             BEGIN
-                EXECUTE 'SELECT COUNT(*) FROM ' || quote_ident($1) || '.' || quote_ident($2) || ';' INTO row_count;
+                EXECUTE 'SELECT COUNT(*) FROM presence.' || quote_ident($1) || ';' INTO row_count;
             RAISE NOTICE 'has % rows.', row_count;
             END;
             $$ LANGUAGE plpgsql;");
-            $result = pg_query_params($conn, 'SELECT countrow($1, $2)', array($pres, $month));
+            $result = pg_query_params($conn, 'SELECT countrow($1)', array($month));
             preg_match('/has (.*) rows./', pg_last_notice($conn), $rowCount);
 
-            //SYNC FUNCTION
 
-            pg_query($conn, "CREATE OR REPLACE FUNCTION syncnames(text, text, text) RETURNS VOID AS $$
+
+            //SYNC FUNCTION
+            pg_query($conn, "CREATE OR REPLACE FUNCTION syncnames(text, text) RETURNS VOID AS $$
             BEGIN
-                EXECUTE 'INSERT INTO ' || quote_ident($1) || '.' || quote_ident($2) || '(kelas, absen, nama, id) SELECT kelas,absen,nama,id FROM ' || quote_ident($1) || '.' || quote_ident($3) || ';';
+                EXECUTE 'INSERT INTO presence.' || quote_ident($1) || '(kelas, absen, nama, id) SELECT kelas,absen,nama,id FROM presence.' || quote_ident($2) || ';';
             END;
             $$ LANGUAGE plpgsql;");
             
             if ($rowCount[1] == 0) {
-                pg_query_params($conn, 'SELECT syncnames($1, $2, $3)', array($pres, $month, $stulist));
+                pg_query_params($conn, 'SELECT syncnames($1, $2)', array($month, $stulist));
             }
            
+
+            
             //AUTOMATIC COLUMN CREATION BASED ON DATE
-
-            pg_query($conn, "CREATE OR REPLACE FUNCTION add_column(text, text, text) RETURNS VOID AS $$
+            pg_query($conn, "CREATE OR REPLACE FUNCTION add_column(text, text) RETURNS VOID AS $$
             BEGIN   
-                EXECUTE 'ALTER TABLE ' || quote_ident($1) || '.' || quote_ident($2) ||' ADD COLUMN IF NOT EXISTS ' || quote_ident($3) || 'TEXT';
+                EXECUTE 'ALTER TABLE presence.' || quote_ident($1) ||' ADD COLUMN IF NOT EXISTS ' || quote_ident($2) || 'TEXT';
             END;
             $$ LANGUAGE plpgsql;");
 
-            pg_query_params($conn,'SELECT add_column($1, $2, $3)', array($pres, $month, $day));
+            pg_query_params($conn,'SELECT add_column($1, $2)', array($month, $day));
             
-            //CREATE TARDY LIST
-            pg_query($conn, "CREATE OR REPLACE FUNCTION droplate(text) RETURNS VOID AS $$
+
+
+            //CREATE PRESENCE LIST        
+            pg_query($conn, "CREATE OR REPLACE FUNCTION checkpresence(text, text) RETURNS VOID AS $$
             BEGIN
-                EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident($1) || '.latelist CASCADE;';
-            END;
-            $$ LANGUAGE plpgsql;");
-            
-            pg_query($conn, "CREATE OR REPLACE FUNCTION checklate(text, text, text) RETURNS VOID AS $$
-            BEGIN
-                EXECUTE 'INSERT INTO ' || quote_ident($1) || '.latelist (kelas, absen, nama, id) SELECT kelas,absen,nama,id FROM ' || quote_ident($1) || '.' || quote_ident($2) || ' WHERE ' || quote_ident($3) || ' IS NULL;';
+                EXECUTE 'INSERT INTO presence.presencelist (kelas, absen, nama, id, kehadiran) SELECT kelas,absen,nama,id,' || quote_ident($2) || ' FROM presence.' || quote_ident($1) || ';';
             END;
             $$ LANGUAGE plpgsql;");
                 
                 
                 
-            pg_query_params($conn, 'SELECT droplate($1)', array($pres));
-            pg_query_params($conn,'SELECT create_table($1, $2)', array($pres, 'latelist'));
-            pg_query_params($conn, 'SELECT checklate($1, $2, $3)', array($pres, $month, $day));
+            pg_query($conn, 'DROP TABLE IF EXISTS presence.presencelist CASCADE;');
+            pg_query($conn,'CREATE TABLE IF NOT EXISTS presence.presencelist (kelas TEXT, absen INT, nama TEXT, id varchar, kehadiran TEXT);');
+            pg_query_params($conn, 'SELECT checkpresence($1, $2)', array($month, $day));
 
 
             //INTERFACE WITH HTTP REQUESTS
@@ -122,7 +117,13 @@
             //4 = OTHERS
             if(isset($_GET['presenceid']) && $_GET['attendancestatus'] == 1) {
                 $presenceid = $_GET['presenceid'];
-                pg_query($conn, "UPDATE $pres.$month SET \"$day\" = '$clock' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
+                $absensi = pg_query($conn, "UPDATE $pres.$month SET \"$day\" = '$clock' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
+                if(pg_affected_rows($absensi) >0){
+                    echo json_encode(['status' => 'success','message'=> 'Attendance updated']);
+                }
+                else{
+                    echo json_encode(['status' => 'error','message'=> 'Attendance not updated']);
+                }
             }             
             elseif(isset($_GET['presenceid']) && $_GET['attendancestatus'] == 2){
                 $presenceid = $_GET['presenceid'];
@@ -136,9 +137,9 @@
                 $presenceid = $_GET['presenceid'];
                 pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Izin' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
             }
-            elseif($clock>11){
-                pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
-            }
+            //elseif($clock>11){
+                //pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
+            //}
         ?>
     </body>
 </html>

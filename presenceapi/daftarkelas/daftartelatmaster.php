@@ -10,7 +10,7 @@ $password = "xiid";
 $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
 
 // Query to fetch names
-$query = 'SELECT nama, id FROM presence.latelist';
+$query = 'SELECT nama, id FROM presence.presencelist';
 $result = pg_query($conn, $query);
 ?>
 

@@ -7,6 +7,6 @@ SELECT
     JSON(PLACEHOLDER) as menu_item; 
 SELECT 'shell' AS component, 'placekelas' AS title;
 SELECT 'button' AS component, 'center' AS justify;
-SELECT 'Daftar Tidak Hadir' AS title, '/daftarmurid/placekelas.sql' as link;
-SELECT 'list' AS component, 'Daftar Telat Kelas placekelas' AS title;
+SELECT 'Alasan Tidak Hadir' AS title, 'http://localhost:8090/daftarkelas/daftartelatplacekelas.php' as link;
+SELECT 'list' AS component, 'Daftar Kehadiran Kelas placekelas' AS title;
 SELECT nama AS title FROM presence.presencelist WHERE kelas = 'placekelas'; 
