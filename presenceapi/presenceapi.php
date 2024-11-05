@@ -103,6 +103,7 @@
             pg_query($conn, 'DROP TABLE IF EXISTS presence.presencelist CASCADE;');
             pg_query($conn,'CREATE TABLE IF NOT EXISTS presence.presencelist (kelas TEXT, absen INT, nama TEXT, id varchar, kehadiran TEXT);');
             pg_query_params($conn, 'SELECT checkpresence($1, $2)', array($day, $month));
+            pg_query($conn, "UPDATE presence.presencelist SET kehadiran = 'Belum Terdata' WHERE kehadiran IS NULL");
 
 
             //INTERFACE WITH HTTP REQUESTS

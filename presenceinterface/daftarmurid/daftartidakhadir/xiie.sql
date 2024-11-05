@@ -18,4 +18,4 @@ SELECT
 SELECT 'button' AS component, 'center' AS justify;
 SELECT 'Alasan Tidak Hadir' AS title, 'http://localhost:8090/daftarkelas/daftartelatxiie.php' as link;
 SELECT 'list' AS component, 'Daftar Telat Kelas XII-E' AS title;
-SELECT nama AS title FROM presence.presencelist WHERE kelas = 'XII-E' AND kehadiran IS NULL; 
+SELECT nama AS title FROM presence.presencelist WHERE kelas = 'XII-E' AND kehadiran = 'Belum Terdata'; 

@@ -10,7 +10,7 @@ $password = "xiid";
 $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
 
 // Query to fetch names
-$query = 'SELECT nama, id FROM presence.presencelist WHERE kelas = \'XII-C\' AND kehadiran IS NULL';
+$query = 'SELECT nama, id FROM presence.presencelist WHERE kelas = \'XII-C\' AND kehadiran = \'Belum Terdata\'';
 $result = pg_query($conn, $query);
 ?>
 
