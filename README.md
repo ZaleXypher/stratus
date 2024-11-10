@@ -15,7 +15,7 @@ Uses PostgreSQL to store attendance data and student list
 <h2>Data Downloads Sorted by Year and Month</h2>
 
 ![data downloads](/readmeresources/datadownload.png)
-<h2>Change Attendance Status</h2>
+<h2>Interface to Change Attendance Status</h2>
 
 ![status](/readmeresources/changestatus.png)
 <h1>Credits</h1>
