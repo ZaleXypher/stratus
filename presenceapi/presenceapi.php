@@ -43,7 +43,7 @@
             BEGIN
                 FOR id IN EXECUTE 'SELECT md5(nama) FROM presence.' || quote_ident($1)
                 LOOP
-                    EXECUTE 'UPDATE presence.' || quote_ident($1) || ' SET id = ''' || id || ''' WHERE nama = (SELECT nama FROM presence.' || quote_ident($1) || ' WHERE md5(nama) = ''' || id || ''');';
+                    EXECUTE 'UPDATE presence.' || quote_ident($1) || ' SET id = ''' || substr(id, 1, 16) || ''' WHERE nama = (SELECT nama FROM presence.' || quote_ident($1) || ' WHERE md5(nama) = ''' || id || ''');';
                 END LOOP;
             END
             $$ LANGUAGE plpgsql;");
