@@ -9,13 +9,13 @@ Uses PostgreSQL to store attendance data and student list
 <h2>Attendance list sorted by class with current attendance status</h2>
 
 ![attendance list](/readmeresources/presencelist.png)
-<h2>List of absent students</h2>
+<h2>List of Absent Students</h2>
 
 ![absence list](/readmeresources/absencelist.png)
-<h2>Data downloads sorted by year and month</h2>
+<h2>Data Downloads Sorted by Year and Month</h2>
 
 ![data downloads](/readmeresources/datadownload.png)
-<h2>Change attendance status</h2>
+<h2>Change Attendance Status</h2>
 
 ![status](/readmeresources/changestatus.png)
 <h1>Credits</h1>
