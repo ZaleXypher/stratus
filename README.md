@@ -6,7 +6,7 @@ Uses PostgreSQL to store attendance data and student list
 <h2>Home Page</h2>
 
 ![homepage](/readmeresources/homepage.png)
-<h2>Attendance List Sorted by Class W/Attendance Status</h2>
+<h2>Attendance List Sorted by Class w/Attendance Status</h2>
 
 ![attendance list](/readmeresources/presencelist.png)
 <h2>List of Absent Students</h2>
