@@ -1,12 +1,12 @@
 <h1>Stratus</h1>
-Strada Automated Attendance System is a student attendance system, meant to be used in conjunction with an RFID attendance card for automation and making it easier for both teachers and students to report their attendance.<br>
+Strada Automated Attendance System is a student attendance system, meant to be used in conjunction with an RFID attendance card to automate reporting of student's attendance.<br>
 Made for P5 assignment<br>
 Uses PostgreSQL to store attendance data and student list
 <h1>Features</h1>
 <h2>Home Page</h2>
 
 ![homepage](/readmeresources/homepage.png)
-<h2>Attendance list sorted by class with current attendance status</h2>
+<h2>Attendance List Sorted by Class w/Attendance Status</h2>
 
 ![attendance list](/readmeresources/presencelist.png)
 <h2>List of Absent Students</h2>
