@@ -11,10 +11,13 @@
     <body>
         <?php
             //DB INFO
-            $user = 'strada';
-            $host = 'localhost';
-            $port = 5432;
-            $dbname = 'strada';
+            $config = include('config/config.php');
+            $host = $config['host'];
+            $port = $config['port'];
+            $dbname = $config['dbname'];
+            $user = $config['user'];
+            $password = $config['password'];
+            echo $host;
 
             //CONNECTING TO THE DB
             $conn = pg_connect("host=$host dbname=$dbname user=$user password=xiid");

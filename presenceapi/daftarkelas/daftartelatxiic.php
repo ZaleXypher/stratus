@@ -1,10 +1,11 @@
 <?php
 // Database connection parameters
-$host = "localhost";
-$port = "5432";
-$dbname = "strada";
-$user = "strada";
-$password = "xiid";
+$config = include('../config/config.php');
+$host = $config['host'];
+$port = $config['port'];
+$dbname = $config['dbname'];
+$user = $config['user'];
+$password = $config['password'];
 
 // Establish a connection
 $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");

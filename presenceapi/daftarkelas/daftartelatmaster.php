@@ -1,10 +1,11 @@
 <?php
 // Database connection parameters
-$host = "localhost";
-$port = "5432";
-$dbname = "strada";
-$user = "strada";
-$password = "xiid";
+$config = include('../config/config.php');
+$host = $config['host'];
+$port = $config['port'];
+$dbname = $config['dbname'];
+$user = $config['user'];
+$password = $config['password'];
 
 // Establish a connection
 $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
@@ -17,7 +18,7 @@ $result = pg_query($conn, $query);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Stratus</title>
+    <title>Stratus</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Telat</title>
