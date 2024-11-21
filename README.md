@@ -18,6 +18,44 @@ Uses PostgreSQL to store attendance data and student list
 <h2>Interface to Change Attendance Status</h2>
 
 ![status](/readmeresources/changestatus.png)
+
+<h1>How to Run</h1>
+<li>Clone the repository</li>
+<li>Start a PostgreSQL server, i.e with Docker</li>
+<li>Modify Config</li>
+Replace DB credentials in 
+
+  ```
+  presenceapi/config/config.php
+  ``` 
+  and 
+  ```
+  presenceinterface/sqlpage/sqlpage.json
+  ```
+<li>Run the following command in the Postgres DB</li>
+
+```
+CREATE TABLE studentlist(kelas TEXT, absen INT, nama TEXT, id VARCHAR)
+```
+
+<li>Run a PHP server in presencelist on port 8090</li>
+For example if you are using PHP Development Server
+
+```
+cd presencelist
+```
+```
+php -S localhost:8090
+```
+
+<li>Run SQLPage</li>
+
+```
+cd presenceinterface
+```
+```
+./sqlpage.bin
+```
 <h1>Credits</h1>
 https://github.com/sqlpage/SQLPage for UI framework
 
