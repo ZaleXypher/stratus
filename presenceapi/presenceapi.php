@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
-    <title>Stratus</title>
-    <script>
-        var referrer = document.referrer;
-        if(referrer) {
-            window.location.href = referrer;
-        }    
-    </script>
-    
+    <head>
+        <title>Stratus</title>
+        <script>
+            var referrer = document.referrer;
+            if(referrer) {
+                window.location.href = referrer;
+            }    
+        </script>
+    </head>
     <body>
         <?php
             $config = include('config/config.php');
@@ -16,7 +17,6 @@
             $dbname = $config['dbname'];
             $user = $config['user'];
             $password = $config['password'];
-            echo $host;
 
             $conn = pg_connect("host=$host dbname=$dbname user=$user password=xiid");
             $stat = pg_connection_status($conn);
@@ -71,12 +71,6 @@
                 EXECUTE 'INSERT INTO presence.presencelist (kelas, absen, nama, id, kehadiran) SELECT kelas,absen,nama,id,' || quote_ident($1) || ' FROM presence.' || quote_ident($2) || ';';
             END;
             $$ LANGUAGE plpgsql;");
-            
-            pg_query($conn, "CREATE OR REPLACE FUNCTION checkpresence(text, text) RETURNS VOID AS $$
-            BEGIN
-                EXECUTE 'INSERT INTO presence.presencelist (kelas, absen, nama, id, kehadiran) SELECT kelas,absen,nama,id,' || quote_ident($1) || ' FROM presence.' || quote_ident($2) || ';';
-            END;
-            $$ LANGUAGE plpgsql;");
 
 
 
@@ -113,9 +107,9 @@
                     pg_query($conn, "UPDATE presence.$month SET \"$day\" = 'Izin' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
                 }
             }
-            //elseif($clock>11){
-                //pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
-            //}
+            elseif($clock>10){
+                pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
+            }
         ?>
     </body>
 </html>

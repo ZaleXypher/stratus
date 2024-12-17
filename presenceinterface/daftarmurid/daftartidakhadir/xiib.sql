@@ -17,5 +17,8 @@ SELECT
     {"link":"/datadownloads/data2025.sql","title":"2025"}]}') as menu_item;
 SELECT 'button' AS component, 'center' AS justify;
 SELECT 'Alasan Tidak Hadir' AS title, 'http://localhost:8090/daftarkelas/daftartelatxiib.php' as link;
+SELECT 'button' AS component, 'center' AS justify;
+
+SELECT 'Refresh' AS title, '_blank' AS target, 'http://localhost:8090/refreshlate.php' as link;
 SELECT 'list' AS component, 'Daftar Telat Kelas XII-B' AS title;
 SELECT nama AS title FROM presence.presencelist WHERE kelas = 'XII-B' AND kehadiran = 'Belum Terdata'; 
