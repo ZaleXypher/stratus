@@ -32,6 +32,13 @@ Replace DB credentials in
   ```
   presenceinterface/sqlpage/sqlpage.json
   ```
+
+Replace references to localhost in 
+
+  ```
+  presenceinterface/daftarmurid/daftartidakhadir/_____.php
+  ```
+
 <li>Run the following command in the Postgres DB</li>
 
 ```
