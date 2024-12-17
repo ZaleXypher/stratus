@@ -36,6 +36,11 @@ Replace DB credentials in
 Replace references to localhost in 
 
   ```
+  presenceinterface/daftarmurid/_____.php
+  ```
+
+
+  ```
   presenceinterface/daftarmurid/daftartidakhadir/_____.php
   ```
 
