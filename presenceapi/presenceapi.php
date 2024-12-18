@@ -107,9 +107,9 @@
                     pg_query($conn, "UPDATE presence.$month SET \"$day\" = 'Izin' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
                 }
             }
-            elseif($clock>10){
-                pg_query($conn, "UPDATE $pres.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
-            }
+            //elseif($clock>10){
+            //    pg_query($conn, "UPDATE presence.$month SET \"$day\" = 'Tidak Hadir' WHERE \"$day\" IS NULL");
+            //}
         ?>
     </body>
 </html>
