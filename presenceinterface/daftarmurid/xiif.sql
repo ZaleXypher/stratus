@@ -15,8 +15,8 @@ SELECT
     JSON('{"title":"Data Absensi","submenu":
     [{"link":"/datadownloads/data2024.sql","title":"2024"},
     {"link":"/datadownloads/data2025.sql","title":"2025"}]}') as menu_item;
-set api_results = sqlpage.fetch('http://localhost:8090/presenceapi.php');
+set refresh_data = sqlpage.fetch('http://0.0.0.0:8090/presenceapi.php');
 SELECT 'button' AS component, 'center' AS justify;
 SELECT 'Daftar Tidak Hadir' AS title, 'daftartidakhadir/xiif.sql' as link;
 SELECT 'list' AS component, 'Daftar Kehadiran  Kelas XII-F' AS title;
-SELECT nama AS title, kehadiran AS description FROM presence.presencelist WHERE kelas = 'XII-F'; 
+SELECT nama AS title, kehadiran AS description FROM presence.presencelist WHERE kelas = 'XII-F' ORDER BY absen; 

@@ -1,2 +1,3 @@
 SELECT 'csv' AS component, 'januari2025.csv' as filename;
-SELECT * FROM presence.january_2025;
+SELECT * FROM presence.january_2025
+ORDER BY kelas, absen;

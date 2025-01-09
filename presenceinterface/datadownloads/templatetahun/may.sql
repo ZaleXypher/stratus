@@ -1,2 +1,3 @@
 SELECT 'csv' AS component, 'meiPLACEHOLDER.csv' as filename;
-SELECT * FROM presence.may_PLACEHOLDER;
+SELECT * FROM presence.may_PLACEHOLDER
+ORDER BY kelas, absen;
