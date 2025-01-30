@@ -120,14 +120,14 @@ if (isset($_GET['presenceid']) || isset($_GET['hexid'])) {
     
     if ($_GET['attendancestatus'] == 1) {
         $absensi = pg_query($conn, "UPDATE presence.$month SET \"$day\" = '$clock' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
-        $namatabel = pg_fetch_assoc(pg_query($conn, "SELECT nama FROM presence.$month WHERE \"id\" = '$presenceid'"));
-        $nama = $namatabel['nama'];
+        $namatabel = pg_fetch_assoc(pg_query($conn, "SELECT split_part(nama, ' ', 1) AS first_word FROM presence.$month WHERE \"id\" = '$presenceid'"));
+        $nama = $namatabel['first_word'];
         if (pg_affected_rows($absensi) > 0) {
             header('Content-type: application/json');
-            echo json_encode(['status' => 'Success', 'message' => 'Attendance updated', 'nama' => $nama]);
+            echo json_encode(['status' => 'Success', 'nama' => $nama]);
         } else {
             header('Content-type: application/json');
-            echo json_encode(['status' => 'Error', 'message' => 'Attendance not updated']);
+            echo json_encode(['status' => 'Error']);
         }
     } elseif ($_GET['attendancestatus'] == 2) {
         pg_query($conn, "UPDATE presence.$month SET \"$day\" = 'Telat' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
@@ -136,10 +136,9 @@ if (isset($_GET['presenceid']) || isset($_GET['hexid'])) {
     } elseif ($_GET['attendancestatus'] == 4) {
         pg_query($conn, "UPDATE presence.$month SET \"$day\" = 'Izin' WHERE \"id\" = '$presenceid' AND \"$day\" IS NULL");
     }
-    exit; // Ensure no further output is sent
+    exit;
 }
 
-// If you want to keep the HTML part for other purposes, you can separate it
 ?>
 <!DOCTYPE html>
 <html>
